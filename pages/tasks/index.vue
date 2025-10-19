@@ -53,11 +53,6 @@ const toggleSort = (field: string) => {
   }
 }
 
-const splitCamelCase = (str: string) => {
-  return str.replace(/([a-z])([A-Z])/g, '$1 $2')
-}
-
-// Локальный компонент
 const SortableHeader = defineComponent({
   props: {
     title: String,

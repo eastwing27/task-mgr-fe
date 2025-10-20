@@ -2,7 +2,7 @@ S<template>
   <div>
     <div class="h-row">
       <h1>Tasks</h1>
-      <TmButton :onclick="openCreateModal">Add New</TmButton>
+      <TmButton :onclick="openModal">Add New</TmButton>
     </div>
     <div v-if="pending">Loading...</div>
     <div v-else-if="error">Error: {{ error.message }}</div>
@@ -28,8 +28,9 @@ S<template>
     </div>
     
     <TmTaskModal 
-      :is-open="createModal.isOpen.value"
-      @close="createModal.close"
+      :is-open="taskModal.isOpen.value"
+      :onSubmit="() => refresh()"
+      @close="taskModal.close"
     />
   </div>
 </template>
@@ -50,8 +51,8 @@ const filters = computed(() => ({
 
 const { data: tasks, error, pending, refresh } = await useGetTasks(filters)
 
-const createModal = useModal()
-const openCreateModal = () => createModal.open()
+const taskModal = useModal()
+const openModal = () => taskModal.open()
 
 const toggleSort = (field: string) => {
   if (sortBy.value === field) {
@@ -77,7 +78,7 @@ const SortableHeader = defineComponent({
     return () => h('strong', 
       { 
         onClick: handleClick,
-        style: { cursor: 'pointer', userSelect: 'none' }
+        style: { cursor: 'pointer', userSelect: 'none', color: '#007b99' }
       },
       [
         props.title,

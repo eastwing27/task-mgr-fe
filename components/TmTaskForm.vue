@@ -46,6 +46,7 @@
 <script lang="ts" setup>
 const props = defineProps<{
   task?: TaskDTO;
+  afterSubmit?: () => void;
 }>()
 
 const editTask = ref<EditTaskDTO>({
@@ -73,22 +74,25 @@ const handleStatusChange = (value: string | undefined) => {
 
 const submit = async () => {
   if (!props.task) {
-
     await useCreateTask({
       title: editTask.value.title ?? "New Task",
       description: editTask.value.description,
       deadline: editTask.value.deadline,
     })
-    return;
   }
-
-  await usePatchTask(props.task.id, {
-    id: props.task.id,
-    title: editTask.value.title,
-    description: editTask.value.description,
-    status: editTask.value.status,
-    deadline: editTask.value.deadline,
-  }) 
+  else {
+    await usePatchTask(props.task.id, {
+      id: props.task.id,
+      title: editTask.value.title,
+      description: editTask.value.description,
+      status: editTask.value.status,
+      deadline: editTask.value.deadline,
+    })
+  }
+  
+  if (props.afterSubmit) {
+    props.afterSubmit()
+  }
 }
 
 const deadlineString = computed({

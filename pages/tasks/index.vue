@@ -1,4 +1,4 @@
-<template>
+S<template>
   <div>
     <div class="h-row">
       <h1>Tasks</h1>
@@ -30,7 +30,6 @@
     <TmTaskModal 
       :is-open="createModal.isOpen.value"
       @close="createModal.close"
-      @submit="handleCreateTask"
     />
   </div>
 </template>
@@ -40,31 +39,19 @@ import TmDropdown from '~/components/TmDropdown.vue';
 import TmRowLink from '~/components/TmRowLink.vue';
 import TmTaskModal from '~/components/TmTaskModal.vue';
 
-const { data: tasks, error, pending, refresh } = await useGetTasks()
-
-const createModal = useModal()
-const openCreateModal = () => createModal.open()
-
-const handleCreateTask = async (taskData: NewTaskDTO) => {
-  try {
-    await useCreateTask(taskData)
-    await refresh()
-  } catch (error) {
-    console.error('Failed to create task:', error)
-  }
-}
-
 const statusFilter = ref<string | undefined>(undefined);
 const sortBy = ref<string>("id");
 const sortOrder = ref<'asc' | 'desc'>('asc');
 
-watch([statusFilter, sortBy, sortOrder], async ([newStatus, newSortBy, newSortOrder]) => {
-  const { data } = await useGetTasks({ 
-    status: newStatus,
-    sortBy: `${newSortBy}:${newSortOrder}`,
-  })
-  tasks.value = data.value
-}, { immediate: true })
+const filters = computed(() => ({
+  status: statusFilter.value,
+  sortBy: sortBy.value ? `${sortBy.value}:${sortOrder.value}` : undefined
+}))
+
+const { data: tasks, error, pending, refresh } = await useGetTasks(filters)
+
+const createModal = useModal()
+const openCreateModal = () => createModal.open()
 
 const toggleSort = (field: string) => {
   if (sortBy.value === field) {

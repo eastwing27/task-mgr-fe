@@ -1,16 +1,11 @@
 <template>
   <div class="container">
     <h1>Task Manager</h1>
-    <p>Добро пожаловать в систему управления задачами</p>
+    <p>You can get to the task list here:</p>
     
-    <div class="navigation">
-      <TmLink to="/tasks">
-        Просмотреть задачи
-      </TmLink>
-      <TmLink to="/task/1">
-        Пример задачи
-      </TmLink>
-    </div>
+    <TmLink to="/tasks">
+      View Tasks
+    </TmLink>
   </div>
 </template>
 
@@ -20,12 +15,5 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-}
-
-.navigation {
-  margin-top: 2rem;
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
 }
 </style>

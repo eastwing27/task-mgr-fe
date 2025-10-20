@@ -1,6 +1,9 @@
 <template>
   <div>
-    <h1>Tasks</h1>
+    <div class="h-row">
+      <h1>Tasks</h1>
+      <TmButton :onclick="openCreateModal">Add New</TmButton>
+    </div>
     <div v-if="pending">Loading...</div>
     <div v-else-if="error">Error: {{ error.message }}</div>
     <div v-else-if="tasks">
@@ -23,14 +26,33 @@
         <p>{{ task.deadline ? new Date(task.deadline).toLocaleString() : 'No deadline' }}</p>
       </TmRowLink>
     </div>
+    
+    <TmTaskModal 
+      :is-open="createModal.isOpen.value"
+      @close="createModal.close"
+      @submit="handleCreateTask"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import TmDropdown from '~/components/TmDropdown.vue';
 import TmRowLink from '~/components/TmRowLink.vue';
+import TmTaskModal from '~/components/TmTaskModal.vue';
 
-const { data: tasks, error, pending } = await useGetTasks()
+const { data: tasks, error, pending, refresh } = await useGetTasks()
+
+const createModal = useModal()
+const openCreateModal = () => createModal.open()
+
+const handleCreateTask = async (taskData: NewTaskDTO) => {
+  try {
+    await useCreateTask(taskData)
+    await refresh()
+  } catch (error) {
+    console.error('Failed to create task:', error)
+  }
+}
 
 const statusFilter = ref<string | undefined>(undefined);
 const sortBy = ref<string>("id");
@@ -88,5 +110,15 @@ const SortableHeader = defineComponent({
 
 .title {
   padding-bottom: 1dvh;
+}
+
+.h-row {
+  display: flex;
+  gap: 1dvw;
+
+  button {
+    height: fit-content;
+    margin: auto 0;
+  }
 }
 </style>

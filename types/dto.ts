@@ -14,6 +14,13 @@ export interface UpdateTaskDTO {
     status?: TaskStatus;
 };
 
+export interface EditTaskDTO {
+    title?: string;
+    description?: string;
+    deadline?: Date;
+    status?: TaskStatus;
+};
+
 export interface TaskDTO {
     id: number;
     title: string;

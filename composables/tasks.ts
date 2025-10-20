@@ -29,3 +29,9 @@ export const useCreateTask = (data: NewTaskDTO) => {
     body: data,
   })
 };
+
+export const useDeleteTask = (id: number) => {
+  return useApiFetch<void>(`task/${id}`, {
+    method: 'DELETE',
+  })
+}

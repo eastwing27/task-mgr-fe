@@ -1,22 +1,22 @@
 <template>
-  <NuxtLink :to="to" class="row link-line">
+  <div class="row task-line" @click="onclick">
     <slot />
-  </NuxtLink>
+  </div>
 </template>
 
 <script lang="ts" setup>
-defineProps<{to: string}>()
+defineProps<{onclick: () => void}>()
 </script>
 
-<style>
-.link-line {
+<style scoped>
+.task-line {
   text-decoration: none;
   color: inherit;
   cursor: pointer;
   transition: background-color .35s;
   border-top: 1px solid #d1d9e6;
 }
-.link-line:hover {
+.task-line:hover {
   background-color: #c5cee2;
 }
 </style>

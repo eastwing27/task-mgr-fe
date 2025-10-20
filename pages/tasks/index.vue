@@ -2,7 +2,7 @@ S<template>
   <div>
     <div class="h-row">
       <h1>Tasks</h1>
-      <TmButton :onclick="openModal">Add New</TmButton>
+      <TmButton :onclick="() => openModal()">Add New</TmButton>
     </div>
     <div v-if="pending">Loading...</div>
     <div v-else-if="error">Error: {{ error.message }}</div>
@@ -19,7 +19,7 @@ S<template>
         ]" :onSelect="(value) => statusFilter = value || undefined" />
         <SortableHeader title="Deadline" field="deadline" />
       </div>
-      <TmRowLink v-for="task in tasks" :key="task.id" :to="`/tasks/${task.id}`">
+      <TmRowLink v-for="task in tasks" :key="task.id" :onclick="() => openModal(task)">
         <p>#{{ task.id }}</p>
         <p>{{ task.title }}</p>
         <p class="status-p">{{ splitCamelCase(task.status) }}</p>
@@ -29,7 +29,8 @@ S<template>
     
     <TmTaskModal 
       :is-open="taskModal.isOpen.value"
-      :onSubmit="() => refresh()"
+      :task="editingTask"
+      :on-submit="() => refresh()"
       @close="taskModal.close"
     />
   </div>
@@ -52,7 +53,22 @@ const filters = computed(() => ({
 const { data: tasks, error, pending, refresh } = await useGetTasks(filters)
 
 const taskModal = useModal()
-const openModal = () => taskModal.open()
+const editingTask = ref<TaskDTO | undefined>(undefined)
+
+const openModal = async (taskBrief?: TaskBriefDTO) => {
+  if (taskBrief) {
+    try {
+      const { data: fullTask } = await useGetTask(taskBrief.id.toString())
+      editingTask.value = fullTask.value
+    } catch (error) {
+      console.error('Failed to load task:', error)
+      return
+    }
+  } else {
+    editingTask.value = undefined
+  }
+  taskModal.open()
+}
 
 const toggleSort = (field: string) => {
   if (sortBy.value === field) {

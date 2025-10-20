@@ -39,7 +39,10 @@
         class="form-input"
       />
     </div>
-    <TmButton :onclick="submit">Save Task</TmButton>
+    <div class="button-row">
+      <TmButton :onclick="submit">Save Task</TmButton>
+      <TmButton secondary v-if="props.task" :onclick="deleteTask">Delete Task</TmButton>
+    </div>
   </div>
 </template>
 
@@ -90,9 +93,13 @@ const submit = async () => {
     })
   }
   
-  if (props.afterSubmit) {
-    props.afterSubmit()
-  }
+  props.afterSubmit?.();
+}
+
+const deleteTask = async () => {
+  if (!props.task) return;
+  await useDeleteTask(props.task.id);
+  props.afterSubmit?.();
 }
 
 const deadlineString = computed({
@@ -120,6 +127,11 @@ const deadlineString = computed({
     min-height: 100px;
     resize: none;
   }
+}
+
+.button-row {
+  display: flex;
+  gap: 1vw;
 }
 
 </style>

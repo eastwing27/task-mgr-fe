@@ -1,75 +1,54 @@
-# Nuxt Minimal Starter
+# Task Manager Frontend
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A task management application built with Nuxt.js and Vue 3.
 
-## Setup
+## Architecture Overview
+I was trying to follow the standard Nuxt.js project structure with the following key directories:
+- `components/` - Reusable Vue components like task list, task form, buttons, etc.
+- `pages/` - At the moment there are only the landing page placeholder, the task list and task detail page. The latter is not in use and can only be accessed manually as it is replaced with modal. It is there just to demonstrate routing.
+- `composables/` - Vue composables for API interactions (fetching, creating, updating, deleting tasks).
+- `types/` - TypeScript type definitions for Task and API responses.
+- `assets/css/` - Global styles.
+- `utils/` - Utility functions.
 
-Make sure to install dependencies:
+## Possible Improvements
+- Implement pagination for task list if there are many tasks.
+- Add user authentication and authorization; possibility to set the task performer.
+- At the moment, task list page fetches all the task on every task change. It can be optimized by updating only the changed task after successful result got from the API call.
+- Real-time updates with WebSockets.
+- Better UX:
+  - Loading indicators for API calls.
+  - Confirmation dialogs for deleting tasks.
+  - Error handling and user feedback for API calls.
+  - All the columns can be made sortable.
+  - Better looking dropdowns.
+  - Date pickers for deadline input are require time entered manually. This should be improved.
 
-```bash
-# npm
-npm install
+## Prerequisites
 
-# pnpm
-pnpm install
+- Node.js 18+ 
+- npm or yarn
 
-# yarn
-yarn install
+## Getting Started
 
-# bun
-bun install
-```
+1. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-## Development Server
+2. **Set up environment variables**
+   ```bash
+   # Create .env file (optional)
+   API_URL=http://localhost:3000/api/v1
+   ```
 
-Start the development server on `http://localhost:3000`:
+3. **Start development server**
+   Make sure the backend API is available on `API_URL` before starting the frontend.
 
-```bash
-# npm
-npm run dev
+   ```bash
+   npm run dev
+   ```
+   
+   The application will be available at [http://localhost:3001](http://localhost:3001)
 
-# pnpm
-pnpm dev
 
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
